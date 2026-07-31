@@ -4,6 +4,7 @@ import Dashboard from './views/Dashboard';
 import Replenishment from './views/Replenishment';
 import DataImport from './views/DataImport';
 import Assistant from './views/Assistant';
+import { DataProvider } from './contexts/DataContext';
 import './index.css';
 
 function App() {
@@ -25,12 +26,14 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <main className="main-content">
-        {renderContent()}
-      </main>
-    </div>
+    <DataProvider>
+      <div className="app-container">
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <main className="main-content">
+          {renderContent()}
+        </main>
+      </div>
+    </DataProvider>
   );
 }
 

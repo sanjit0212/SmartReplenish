@@ -1,126 +1,141 @@
-import React, { useState } from 'react';
-import { Download, Filter, Search, ArrowRightLeft, TrendingDown, TrendingUp } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Package, AlertCircle, TrendingUp, TrendingDown, ArrowRight, Check } from 'lucide-react';
 import Card from '../components/Card';
 import Button from '../components/Button';
+import { useData } from '../contexts/DataContext';
 import './Replenishment.css';
 
-const replenishmentData = [
-  { id: 'PRD-001', name: 'Pokémon Elite Trainer Box', chain: 'Chain A', store: 'Milano Centro', velocity: 'High', stock: 2, minOrder: 10, action: 'Reorder', suggested: 12, clusterChange: 'Increase' },
-  { id: 'PRD-002', name: 'Lego Star Wars Set', chain: 'Chain B', store: 'Roma Est', velocity: 'High', stock: 1, minOrder: 5, action: 'Reorder', suggested: 8, clusterChange: 'None' },
-  { id: 'PRD-003', name: 'Hot Wheels 50-Pack', chain: 'Chain A', store: 'Torino Nord', velocity: 'Low', stock: 45, minOrder: 5, action: 'Transfer', suggested: 0, clusterChange: 'Decrease' },
-  { id: 'PRD-004', name: 'Barbie Dreamhouse', chain: 'Chain C', store: 'Napoli Sud', velocity: 'Low', stock: 12, minOrder: 2, action: 'Flag', suggested: 0, clusterChange: 'Decrease' },
-  { id: 'PRD-005', name: 'Monopoly Classic', chain: 'Chain A', store: 'Milano Centro', velocity: 'Medium', stock: 4, minOrder: 6, action: 'Reorder', suggested: 6, clusterChange: 'None' },
-];
-
 const Replenishment = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { replenishments } = useData();
+  const [filter, setFilter] = useState('All');
 
-  React.useEffect(() => {
-    fetch('/api/replenishment')
-      .then(res => res.json())
-      .then(d => {
-        if (Array.isArray(d)) {
-          setData(d);
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
+  const filteredData = useMemo(() => {
+    if (!replenishments) return [];
+    if (filter === 'All') return replenishments;
+    if (filter === 'Alerts') return replenishments.filter(r => r.action !== 'None');
+    if (filter === 'Transfers') return replenishments.filter(r => r.action === 'Transfer');
+    return replenishments;
+  }, [replenishments, filter]);
 
-  const renderActionBadge = (action) => {
-    switch (action) {
-      case 'Reorder': return <span className="badge badge-success"><TrendingUp size={12} className="mr-1"/> Reorder</span>;
-      case 'Transfer': return <span className="badge badge-info"><ArrowRightLeft size={12} className="mr-1"/> Transfer</span>;
-      case 'Flag': return <span className="badge badge-danger"><TrendingDown size={12} className="mr-1"/> Flagged</span>;
-      default: return <span className="badge">{action}</span>;
-    }
-  };
+  const stats = useMemo(() => {
+    if (!replenishments) return { total: 0, actionNeeded: 0, hotItems: 0 };
+    const total = replenishments.length;
+    const actionNeeded = replenishments.filter(r => r.action !== 'None').length;
+    const hotItems = replenishments.filter(r => r.velocity === 'High').length;
+    return { total, actionNeeded, hotItems };
+  }, [replenishments]);
 
   return (
     <div className="replenishment-view animate-fade-in">
       <div className="view-header mb-2">
         <div>
           <h1>Replenishment <span className="text-gradient">Engine</span></h1>
-          <p className="text-muted">AI-driven reorder suggestions, inter-store transfers, and cluster optimizations.</p>
+          <p className="text-muted">Smart algorithms driving inventory distribution.</p>
         </div>
-        <Button variant="primary" icon={Download}>Export Orders (Excel)</Button>
+        <div className="flex gap-2">
+          <Button variant="outline">Export CSV</Button>
+          <Button variant="primary" icon={Check}>Execute All Actions</Button>
+        </div>
       </div>
 
-      <Card>
-        <div className="table-controls">
-          <div className="search-bar">
-            <Search size={18} className="text-muted" />
-            <input 
-              type="text" 
-              placeholder="Search products, stores, or chains..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="input-field"
-            />
+      <div className="stats-row mb-4">
+        <Card className="stat-card">
+          <span className="stat-label">Total SKUs Tracked</span>
+          <span className="stat-value">{stats.total}</span>
+        </Card>
+        <Card className="stat-card">
+          <span className="stat-label">Action Required</span>
+          <span className="stat-value text-rose">{stats.actionNeeded}</span>
+        </Card>
+        <Card className="stat-card">
+          <span className="stat-label">Hot Velocity Items</span>
+          <span className="stat-value text-emerald">{stats.hotItems}</span>
+        </Card>
+      </div>
+
+      <Card className="table-wrapper">
+        <div className="table-controls mb-2">
+          <div className="filter-tabs">
+            {['All', 'Alerts', 'Transfers'].map(t => (
+              <button 
+                key={t}
+                className={`tab-btn ${filter === t ? 'active' : ''}`}
+                onClick={() => setFilter(t)}
+              >
+                {t}
+              </button>
+            ))}
           </div>
-          <Button variant="outline" icon={Filter}>Filters</Button>
         </div>
 
         <div className="table-container">
           <table>
             <thead>
               <tr>
-                <th>Product</th>
-                <th>Location</th>
-                <th>Velocity</th>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Store</th>
                 <th>Stock</th>
-                <th>Action</th>
-                <th>Suggested Qty</th>
-                <th>Cluster Adj.</th>
+                <th>Velocity</th>
+                <th>Recommended Action</th>
+                <th>Cluster Change</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr><td colSpan="7" className="text-center py-4">Loading algorithm results...</td></tr>
-              ) : data
-                .filter(row => 
-                  row.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                  row.store.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  row.chain.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map((row) => (
-                <tr key={`${row.id}-${row.store}`}>
-                  <td>
-                    <div className="product-info">
-                      <span className="product-name">{row.name}</span>
-                      <span className="product-id text-muted">{row.id}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="location-info">
-                      <span className="store-name">{row.store}</span>
-                      <span className="chain-name text-muted">{row.chain}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`velocity-indicator ${row.velocity.toLowerCase()}`}>
-                      {row.velocity}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={row.stock <= row.minOrder ? 'text-rose font-medium' : ''}>
-                      {row.stock} <span className="text-muted text-xs">(Min: {row.minOrder})</span>
-                    </span>
-                  </td>
-                  <td>{renderActionBadge(row.action)}</td>
-                  <td className="font-medium text-emerald">{row.suggested > 0 ? `+${row.suggested}` : '-'}</td>
-                  <td>
-                    {row.clusterChange === 'Increase' && <span className="text-emerald text-sm">↑ Increase</span>}
-                    {row.clusterChange === 'Decrease' && <span className="text-rose text-sm">↓ Decrease</span>}
-                    {row.clusterChange === 'None' && <span className="text-muted text-sm">-</span>}
-                  </td>
+              {!filteredData || filteredData.length === 0 ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 text-muted">No data available.</td>
                 </tr>
-              ))}
+              ) : (
+                filteredData.map((row) => (
+                  <tr key={`${row.id}-${row.store}`}>
+                    <td className="text-muted font-mono">{row.id}</td>
+                    <td className="font-medium">{row.name}</td>
+                    <td><span className="badge badge-neutral">{row.store}</span></td>
+                    <td>
+                      <div className="flex items-center gap-2">
+                        <Package size={14} className="text-muted" />
+                        <span className={row.stock <= row.minOrder ? 'text-rose font-bold' : ''}>
+                          {row.stock}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      {row.velocity === 'High' ? (
+                        <span className="flex items-center gap-1 text-emerald"><TrendingUp size={14}/> High</span>
+                      ) : row.velocity === 'Low' ? (
+                        <span className="flex items-center gap-1 text-rose"><TrendingDown size={14}/> Low</span>
+                      ) : (
+                        <span className="text-muted">Medium</span>
+                      )}
+                    </td>
+                    <td>
+                      {row.action === 'Reorder' ? (
+                        <span className="action-pill reorder"><AlertCircle size={14} /> Reorder {row.suggested}</span>
+                      ) : row.action === 'Transfer' ? (
+                        <span className="action-pill transfer"><ArrowRight size={14} /> Transfer Overstock</span>
+                      ) : row.action === 'Flag' ? (
+                        <span className="text-rose font-medium text-sm">Flagged</span>
+                      ) : (
+                        <span className="text-muted text-sm">-</span>
+                      )}
+                    </td>
+                    <td>
+                      {row.clusterChange === 'Increase' ? (
+                        <span className="text-emerald font-medium text-sm">↑ Upgrade Tier</span>
+                      ) : row.clusterChange === 'Decrease' ? (
+                        <span className="text-rose font-medium text-sm">↓ Downgrade Tier</span>
+                      ) : (
+                        <span className="text-muted text-sm">-</span>
+                      )}
+                    </td>
+                    <td className="text-right">
+                      {row.action !== 'None' && <Button variant="outline">Review</Button>}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

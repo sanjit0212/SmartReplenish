@@ -5,39 +5,34 @@ import {
 } from 'recharts';
 import { TrendingUp, AlertTriangle, Store, DollarSign, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import Card from '../components/Card';
+import { useData } from '../contexts/DataContext';
 import './Dashboard.css';
 
 const salesData = [
-  { name: 'Week 1', sales: 4000, target: 2400 },
-  { name: 'Week 2', sales: 3000, target: 1398 },
-  { name: 'Week 3', sales: 2000, target: 9800 },
-  { name: 'Week 4', sales: 2780, target: 3908 },
-  { name: 'Week 5', sales: 1890, target: 4800 },
-  { name: 'Week 6', sales: 2390, target: 3800 },
-  { name: 'Week 7', sales: 3490, target: 4300 },
-];
-
-const categoryData = [
-  { name: 'Toys', sellThrough: 85, stock: 15 },
-  { name: 'Cards', sellThrough: 65, stock: 35 },
-  { name: 'Plush', sellThrough: 45, stock: 55 },
-  { name: 'Games', sellThrough: 90, stock: 10 },
-];
-
-const topProducts = [
-  { id: 1, name: 'Pokémon Elite Trainer Box', velocity: '+45%', status: 'Hot', trend: 'up' },
-  { id: 2, name: 'Lego Star Wars Set', velocity: '+32%', status: 'Hot', trend: 'up' },
-  { id: 3, name: 'Hot Wheels 50-Pack', velocity: '-12%', status: 'Slow', trend: 'down' },
-  { id: 4, name: 'Barbie Dreamhouse', velocity: '-8%', status: 'Slow', trend: 'down' },
+  { name: 'Week 1', sales: 4000 },
+  { name: 'Week 2', sales: 3000 },
+  { name: 'Week 3', sales: 2000 },
+  { name: 'Week 4', sales: 2780 },
+  { name: 'Week 5', sales: 1890 },
+  { name: 'Week 6', sales: 2390 },
+  { name: 'Week 7 (Current)', sales: 0 },
 ];
 
 const Dashboard = ({ setActiveTab }) => {
+  const { kpis } = useData();
+
+  if (!kpis) return <div className="p-8">Loading dashboard metrics...</div>;
+
+  // Insert the real sales total into our trend chart for this week
+  const trendData = [...salesData];
+  trendData[6].sales = kpis.totalSales;
+
   return (
     <div className="dashboard-view animate-fade-in">
       <div className="view-header">
         <div>
           <h1>Overview <span className="text-gradient">Dashboard</span></h1>
-          <p className="text-muted">Real-time performance across 29 grids and 200+ points of sale.</p>
+          <p className="text-muted">Real-time performance across 29 grids and {kpis.activeStores} points of sale.</p>
         </div>
       </div>
 
@@ -46,15 +41,15 @@ const Dashboard = ({ setActiveTab }) => {
           <div className="kpi-icon bg-indigo"><DollarSign size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Total Sales (Weekly)</span>
-            <span className="kpi-value">€124,500</span>
-            <span className="kpi-trend positive"><ArrowUpRight size={16} /> 12% vs last week</span>
+            <span className="kpi-value">€{kpis.totalSales.toLocaleString()}</span>
+            <span className="kpi-trend positive"><ArrowUpRight size={16} /> Up this week</span>
           </div>
         </Card>
         <Card className="kpi-card">
           <div className="kpi-icon bg-emerald"><Store size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Active Stores</span>
-            <span className="kpi-value">203</span>
+            <span className="kpi-value">{kpis.activeStores}</span>
             <span className="kpi-trend neutral">All networks connected</span>
           </div>
         </Card>
@@ -65,7 +60,7 @@ const Dashboard = ({ setActiveTab }) => {
           <div className="kpi-icon bg-rose"><AlertTriangle size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Replenishment Alerts</span>
-            <span className="kpi-value">14</span>
+            <span className="kpi-value">{kpis.alertsCount}</span>
             <span className="kpi-trend negative">Requires attention</span>
           </div>
         </Card>
@@ -73,8 +68,8 @@ const Dashboard = ({ setActiveTab }) => {
           <div className="kpi-icon bg-violet"><TrendingUp size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Avg. Sell-Through</span>
-            <span className="kpi-value">68%</span>
-            <span className="kpi-trend positive"><ArrowUpRight size={16} /> 4% vs last week</span>
+            <span className="kpi-value">{kpis.avgSellThrough}%</span>
+            <span className="kpi-trend positive"><ArrowUpRight size={16} /> Good clearance</span>
           </div>
         </Card>
       </div>
@@ -83,7 +78,7 @@ const Dashboard = ({ setActiveTab }) => {
         <Card title="Sales Performance Trend" className="chart-card">
           <div className="chart-container">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={salesData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <AreaChart data={trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="var(--accent-primary)" stopOpacity={0.8}/>
@@ -106,7 +101,7 @@ const Dashboard = ({ setActiveTab }) => {
         <Card title="Category Sell-Through vs Stock" className="chart-card">
           <div className="chart-container">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={categoryData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <BarChart data={kpis.categoryData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
                 <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
@@ -135,7 +130,7 @@ const Dashboard = ({ setActiveTab }) => {
                 </tr>
               </thead>
               <tbody>
-                {topProducts.map((product) => (
+                {kpis.topProducts.map((product) => (
                   <tr key={product.id}>
                     <td className="font-medium">{product.name}</td>
                     <td className={product.trend === 'up' ? 'text-emerald' : 'text-rose'}>
