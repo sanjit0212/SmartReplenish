@@ -15,17 +15,24 @@ export default async function handler(req, res) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
-      systemInstruction: systemInstruction || "You are an AI assistant."
-    });
+    let responseText = '';
 
-    const chat = model.startChat({
-      history: history || []
-    });
-
-    const result = await chat.sendMessage(message);
-    const responseText = result.response.text();
+    try {
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-1.5-flash",
+        systemInstruction: systemInstruction || "You are an AI assistant."
+      });
+      const chat = model.startChat({ history: history || [] });
+      const result = await chat.sendMessage(message);
+      responseText = result.response.text();
+    } catch (e) {
+      console.log('gemini-1.5-flash failed, falling back to gemini-pro. Error:', e.message);
+      // Fallback for older keys or regions that don't support 1.5-flash
+      const fallbackModel = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const fallbackChat = fallbackModel.startChat({ history: history || [] });
+      const fallbackResult = await fallbackChat.sendMessage(message);
+      responseText = fallbackResult.response.text();
+    }
 
     res.status(200).json({ text: responseText });
   } catch (error) {
