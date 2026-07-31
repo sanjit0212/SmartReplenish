@@ -58,6 +58,10 @@ const Assistant = () => {
       - Top Products: ${JSON.stringify(kpis?.topProducts || [])}
       - Total SKUs tracked: ${replenishments?.length || 0}
       
+      Here is the detailed replenishments data (items requiring action or transfers):
+      ${JSON.stringify(replenishments || [])}
+      
+      
       Rules for your responses:
       1. You are a versatile AI. You must answer ANY question the user asks, whether it is about retail replenishment, the provided dataset, or general knowledge (e.g. math, history, coding).
       2. If the user asks about the dataset, use the live data provided above.
