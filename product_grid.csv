@@ -1,0 +1,11 @@
+ProductID,ProductName,Category,MinOrder,AssignedCluster
+PRD-001,"Pokémon Elite Trainer Box",Cards,10,A
+PRD-002,"Lego Star Wars Set",Toys,5,A
+PRD-003,"Hot Wheels 50-Pack",Toys,5,B
+PRD-004,"Barbie Dreamhouse",Toys,2,C
+PRD-005,"Monopoly Classic",Games,6,B
+PRD-006,"Uno Card Game",Cards,20,C
+PRD-007,"Nerf Elite Blaster",Toys,8,B
+PRD-008,"Catan Board Game",Games,4,A
+PRD-009,"Squishmallows 12"",Plush,15,A
+PRD-010,"Rubik's Cube",Games,12,C
