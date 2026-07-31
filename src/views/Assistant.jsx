@@ -59,9 +59,9 @@ const Assistant = () => {
       - Total SKUs tracked: ${replenishments?.length || 0}
       
       Rules for your responses:
-      1. Be helpful, professional, and act as an expert in retail replenishment.
-      2. Use the live data provided above to answer specific questions. 
-      3. Keep answers concise but informative (max 3-4 sentences).`;
+      1. You are a versatile AI. You must answer ANY question the user asks, whether it is about retail replenishment, the provided dataset, or general knowledge (e.g. math, history, coding).
+      2. If the user asks about the dataset, use the live data provided above.
+      3. Keep answers concise but informative.`;
 
       const response = await fetch('/api/chat', {
         method: 'POST',

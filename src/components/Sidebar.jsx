@@ -5,10 +5,11 @@ import {
   Package, 
   Upload, 
   MessageSquare, 
-  Settings 
+  Settings,
+  LogOut
 } from 'lucide-react';
 
-const Sidebar = ({ activeTab, setActiveTab }) => {
+const Sidebar = ({ activeTab, setActiveTab, onLogout }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'replenishment', label: 'Replenishment', icon: Package },
@@ -40,9 +41,16 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
       </nav>
 
       <div className="sidebar-footer">
-        <button className="nav-item">
+        <button 
+          className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+          onClick={() => setActiveTab('settings')}
+        >
           <Settings size={20} />
           <span>Settings</span>
+        </button>
+        <button className="nav-item text-danger" onClick={onLogout} style={{ color: 'var(--danger)' }}>
+          <LogOut size={20} />
+          <span>Logout</span>
         </button>
         <div className="user-profile">
           <div className="avatar">A</div>

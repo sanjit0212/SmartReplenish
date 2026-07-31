@@ -1,14 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './views/Dashboard';
 import Replenishment from './views/Replenishment';
 import DataImport from './views/DataImport';
 import Assistant from './views/Assistant';
+import Login from './views/Login';
+import Welcome from './views/Welcome';
+import Settings from './views/Settings';
 import { DataProvider } from './contexts/DataContext';
 import './index.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [authState, setAuthState] = useState(() => {
+    return localStorage.getItem('smart_auth') || 'login'; // 'login', 'welcome', 'authenticated'
+  });
+
+  useEffect(() => {
+    localStorage.setItem('smart_auth', authState);
+  }, [authState]);
+
+  const handleLogin = () => {
+    setAuthState('welcome');
+  };
+
+  const handleStart = () => {
+    setAuthState('authenticated');
+  };
+
+  if (authState === 'login') {
+    return <Login onLogin={handleLogin} />;
+  }
+
+  if (authState === 'welcome') {
+    return <Welcome onStart={handleStart} />;
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -20,6 +46,8 @@ function App() {
         return <DataImport />;
       case 'assistant':
         return <Assistant />;
+      case 'settings':
+        return <Settings />;
       default:
         return <Dashboard setActiveTab={setActiveTab} />;
     }
@@ -27,8 +55,8 @@ function App() {
 
   return (
     <DataProvider>
-      <div className="app-container">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <div className="app-container animate-fade-in">
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={() => setAuthState('login')} />
         <main className="main-content">
           {renderContent()}
         </main>

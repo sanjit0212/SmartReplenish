@@ -38,7 +38,7 @@ const Dashboard = ({ setActiveTab }) => {
       </div>
 
       <div className="kpi-grid">
-        <Card className="kpi-card">
+        <Card className="kpi-card animate-slide-up" style={{ animationDelay: '0.1s' }}>
           <div className="kpi-icon bg-indigo"><DollarSign size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Total Sales (Weekly)</span>
@@ -46,7 +46,7 @@ const Dashboard = ({ setActiveTab }) => {
             <span className="kpi-trend positive"><ArrowUpRight size={16} /> Up this week</span>
           </div>
         </Card>
-        <Card className="kpi-card">
+        <Card className="kpi-card animate-slide-up" style={{ animationDelay: '0.2s' }}>
           <div className="kpi-icon bg-emerald"><Store size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Active Stores</span>
@@ -55,7 +55,8 @@ const Dashboard = ({ setActiveTab }) => {
           </div>
         </Card>
         <Card 
-          className="kpi-card clickable-card" 
+          className="kpi-card clickable-card animate-slide-up" 
+          style={{ animationDelay: '0.3s' }}
           onClick={() => setActiveTab && setActiveTab('replenishment')}
         >
           <div className="kpi-icon bg-rose"><AlertTriangle size={24} /></div>
@@ -65,7 +66,7 @@ const Dashboard = ({ setActiveTab }) => {
             <span className="kpi-trend negative">Requires attention</span>
           </div>
         </Card>
-        <Card className="kpi-card">
+        <Card className="kpi-card animate-slide-up" style={{ animationDelay: '0.4s' }}>
           <div className="kpi-icon bg-violet"><TrendingUp size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Avg. Sell-Through</span>
@@ -75,7 +76,7 @@ const Dashboard = ({ setActiveTab }) => {
         </Card>
       </div>
 
-      <div className="charts-grid">
+      <div className="charts-grid animate-slide-up" style={{ animationDelay: '0.5s' }}>
         <Card title="Sales Performance Trend" className="chart-card">
           <div className="chart-container">
             <ResponsiveContainer width="100%" height="100%">

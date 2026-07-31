@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { UploadCloud, FileSpreadsheet, CheckCircle, AlertCircle, Loader } from 'lucide-react';
+import * as XLSX from 'xlsx';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import { useData } from '../contexts/DataContext';
@@ -17,43 +18,55 @@ const DataImport = () => {
     setUploadStatus('uploading');
     setErrorMsg(null);
 
-    // Simulate network delay for UX
     setTimeout(async () => {
       setUploadStatus('processing');
       
-      let gridCsv = null;
-      let selloutCsv = null;
-
-      const readPromises = files.map(file => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const text = e.target.result;
-            if (file.name.toLowerCase().includes('grid')) {
-              gridCsv = text;
-            } else if (file.name.toLowerCase().includes('sellout') || file.name.toLowerCase().includes('sale')) {
-              selloutCsv = text;
-            }
-            resolve();
-          };
-          reader.onerror = () => reject(new Error('File read failed'));
-          reader.readAsText(file);
-        });
-      });
+      let gridJson = null;
+      let selloutJson = null;
+      let genericJson = null;
 
       try {
+        const readPromises = files.map(file => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                
+                const name = file.name.toLowerCase();
+                if (name.includes('grid')) {
+                  gridJson = jsonData;
+                } else if (name.includes('sellout') || name.includes('sale')) {
+                  selloutJson = jsonData;
+                } else {
+                  // Fallback for single generic dataset
+                  genericJson = jsonData;
+                }
+                resolve();
+              } catch (err) {
+                reject(err);
+              }
+            };
+            reader.onerror = () => reject(new Error('File read failed'));
+            reader.readAsArrayBuffer(file);
+          });
+        });
+
         await Promise.all(readPromises);
         
-        if (!gridCsv && !selloutCsv) {
-          setErrorMsg('Could not recognize file types. Please name files with "grid" or "sellout".');
-          setUploadStatus('idle');
-          return;
-        }
+        const payload = {
+          gridJson,
+          selloutJson,
+          genericJson
+        };
 
         const res = await fetch('/api/process', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ gridCsv, selloutCsv })
+          body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
@@ -62,7 +75,6 @@ const DataImport = () => {
 
         const data = await res.json();
         
-        // set all context data directly from the backend
         setGridData(data.gridData || []);
         setSalesData(data.salesData || []);
         setReplenishments(data.replenishments || []);
@@ -92,7 +104,7 @@ const DataImport = () => {
               type="file" 
               id="file-upload" 
               multiple 
-              accept=".csv" 
+              accept=".csv, .xlsx, .xls" 
               style={{ display: 'none' }} 
               onChange={handleFileUpload} 
             />
@@ -100,9 +112,15 @@ const DataImport = () => {
               <UploadCloud size={48} className="text-accent" />
             </div>
             <h3>Drag & Drop Data Files</h3>
-            <p className="text-muted mb-2">Select product_grid.csv and weekly_sellout.csv</p>
-            <span className="file-formats">Supports CSV formats</span>
-            {errorMsg && <p className="text-rose mt-2 text-sm">{errorMsg}</p>}
+            <p className="text-muted mb-2">Upload any generic sales dataset (Excel or CSV). The AI will map columns automatically.</p>
+            <div style={{ background: 'rgba(99, 102, 241, 0.05)', padding: '1rem', borderRadius: '0.5rem', marginTop: '1rem', textAlign: 'left', border: '1px solid rgba(99,102,241,0.2)' }}>
+              <strong style={{ fontSize: '0.875rem', color: 'var(--accent-primary)' }}>Advanced Replenishment Requirements:</strong>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                To unlock AI Replenishment Alerts, your files must contain these exact column names:
+                <br/>• <code style={{ color: 'var(--text-primary)' }}>ProductID</code>, <code style={{ color: 'var(--text-primary)' }}>QuantitySold</code>, <code style={{ color: 'var(--text-primary)' }}>CurrentStock</code>, <code style={{ color: 'var(--text-primary)' }}>MinOrder</code>
+              </p>
+            </div>
+            {errorMsg && <p className="text-rose mt-4 text-sm">{errorMsg}</p>}
           </div>
         );
       case 'uploading':

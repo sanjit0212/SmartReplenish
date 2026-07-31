@@ -39,15 +39,15 @@ const Replenishment = () => {
       </div>
 
       <div className="stats-row mb-4">
-        <Card className="stat-card">
+        <Card className="stat-card animate-slide-up" style={{ animationDelay: '0.1s' }}>
           <span className="stat-label">Total SKUs Tracked</span>
           <span className="stat-value">{stats.total}</span>
         </Card>
-        <Card className="stat-card">
+        <Card className="stat-card animate-slide-up" style={{ animationDelay: '0.2s' }}>
           <span className="stat-label">Action Required</span>
           <span className="stat-value text-rose">{stats.actionNeeded}</span>
         </Card>
-        <Card className="stat-card">
+        <Card className="stat-card animate-slide-up" style={{ animationDelay: '0.3s' }}>
           <span className="stat-label">Hot Velocity Items</span>
           <span className="stat-value text-emerald">{stats.hotItems}</span>
         </Card>
