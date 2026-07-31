@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Sparkles } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import Card from '../components/Card';
 import { useData } from '../contexts/DataContext';
 import './Assistant.css';
@@ -65,14 +66,15 @@ const Assistant = () => {
       Rules for your responses:
       1. You are a versatile AI. You must answer ANY question the user asks, whether it is about retail replenishment, the provided dataset, or general knowledge (e.g. math, history, coding).
       2. If the user asks about the dataset, use the live data provided above.
-      3. Keep answers concise but informative.`;
+      3. Format your answers CLEANLY. Use markdown bullet points, bolding for emphasis, and proper line breaks. DO NOT return a single block of text.
+      4. Keep answers concise but highly informative.`;
 
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userText,
-          history: chatHistory, // Send previous history without the current message
+          history: chatHistory,
           systemInstruction: dynamicPrompt
         })
       });
@@ -123,8 +125,12 @@ const Assistant = () => {
                   <div className="message-avatar">
                     {msg.sender === 'bot' ? <Bot size={20} /> : <User size={20} />}
                   </div>
-                  <div className="message-bubble">
-                    <p>{msg.text}</p>
+                  <div className="message-bubble markdown-body">
+                    {msg.sender === 'bot' ? (
+                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    ) : (
+                      <p>{msg.text}</p>
+                    )}
                   </div>
                 </div>
               ))}
