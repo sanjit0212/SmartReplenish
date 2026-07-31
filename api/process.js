@@ -13,8 +13,8 @@ export default async function handler(req, res) {
     }
 
     // Parse CSVs
-    const gridData = parse(gridCsv, { columns: true, skip_empty_lines: true, trim: true });
-    const salesData = parse(selloutCsv, { columns: true, skip_empty_lines: true, trim: true });
+    const gridData = parse(gridCsv, { columns: true, skip_empty_lines: true, trim: true, relax_quotes: true });
+    const salesData = parse(selloutCsv, { columns: true, skip_empty_lines: true, trim: true, relax_quotes: true });
 
     // Execute replenishment algorithm
     const results = [];
