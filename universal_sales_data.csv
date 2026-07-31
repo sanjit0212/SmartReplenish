@@ -1,0 +1,151 @@
+ProductID,ProductName,Category,QuantitySold,CurrentStock,MinOrder,StoreName,Chain
+10001,Running Shoes,Accessories,51,97,40,BookHaven East,BookHaven
+10002,Laptop Stand,Home Goods,23,103,30,BookHaven South,BookHaven
+10003,Laptop Stand,Furniture,81,29,30,SportsWorld West,SportsWorld
+10004,Smart Watch,Electronics,34,88,20,BookHaven Downtown,BookHaven
+10005,Laptop Stand,Fitness,14,5,30,SportsWorld North,SportsWorld
+10006,Coffee Maker,Fitness,3,37,15,MegaMart Outlet,MegaMart
+10007,Denim Jeans,Apparel,40,190,30,BookHaven West,BookHaven
+10008,Coffee Maker,Apparel,19,12,15,SportsWorld West,SportsWorld
+10009,Sci-Fi Novel,Toys,2,63,20,FurniCo East,FurniCo
+10010,Sci-Fi Novel,Home Goods,13,4,20,FurniCo Downtown,FurniCo
+10011,Desk Lamp,Apparel,54,73,20,MegaMart South,MegaMart
+10012,Wireless Headphones,Furniture,141,53,30,SportsWorld Mall,SportsWorld
+10013,Mechanical Keyboard,Books,73,47,40,FurniCo Central,FurniCo
+10014,Throw Pillow,Toys,126,41,20,SportsWorld Mall,SportsWorld
+10015,Ergonomic Chair,Fitness,53,4,10,TechStore East,TechStore
+10016,Gaming Mouse,Accessories,70,190,40,SportsWorld Downtown,SportsWorld
+10017,Yoga Mat,Books,26,84,20,SportsWorld Downtown,SportsWorld
+10018,Laptop Stand,Accessories,0,25,30,SportsWorld North,SportsWorld
+10019,Yoga Mat,Fitness,12,67,20,FurniCo West,FurniCo
+10020,Throw Pillow,Fitness,134,3,20,FurniCo Uptown,FurniCo
+10021,Cotton T-Shirt,Fitness,26,327,50,FurniCo Central,FurniCo
+10022,Desk Lamp,Accessories,35,79,20,MegaMart Central,MegaMart
+10023,Running Shoes,Apparel,110,48,40,SportsWorld Central,SportsWorld
+10024,Resistance Bands,Electronics,18,144,40,MegaMart East,MegaMart
+10025,Desk Lamp,Furniture,48,3,20,SportsWorld Central,SportsWorld
+10026,Ergonomic Chair,Accessories,28,51,10,BookHaven Outlet,BookHaven
+10027,Gaming Mouse,Electronics,62,179,40,BookHaven West,BookHaven
+10028,Action Figure Set,Toys,68,104,15,BookHaven Plaza,BookHaven
+10029,Fitness Tracker,Accessories,33,34,30,TechStore North,TechStore
+10030,Standing Desk,Accessories,19,0,5,BookHaven South,BookHaven
+10031,Smart Watch,Furniture,46,80,20,TechStore North,TechStore
+10032,Gaming Mouse,Apparel,194,56,40,FurniCo Uptown,FurniCo
+10033,Standing Desk,Electronics,14,4,5,BookHaven Uptown,BookHaven
+10034,Yoga Mat,Electronics,4,65,20,MegaMart North,MegaMart
+10035,Desk Lamp,Apparel,49,65,20,TechStore East,TechStore
+10036,Yoga Mat,Fitness,45,36,20,MegaMart Central,MegaMart
+10037,Gaming Mouse,Fitness,110,102,40,TechStore Plaza,TechStore
+10038,Fitness Tracker,Toys,31,34,30,MegaMart Plaza,MegaMart
+10039,Throw Pillow,Books,149,84,20,MegaMart West,MegaMart
+10040,Smart Watch,Accessories,44,8,20,BookHaven Outlet,BookHaven
+10041,Wireless Headphones,Toys,105,111,30,BookHaven Outlet,BookHaven
+10042,Yoga Mat,Furniture,33,121,20,SportsWorld Uptown,SportsWorld
+10043,Cotton T-Shirt,Fitness,374,340,50,FurniCo Outlet,FurniCo
+10044,Desk Lamp,Electronics,12,41,20,FurniCo West,FurniCo
+10045,Resistance Bands,Fitness,226,4,40,SportsWorld South,SportsWorld
+10046,Desk Lamp,Toys,11,67,20,TechStore Uptown,TechStore
+10047,Fitness Tracker,Apparel,8,125,30,FurniCo Uptown,FurniCo
+10048,Running Shoes,Fitness,114,137,40,FurniCo West,FurniCo
+10049,Fitness Tracker,Furniture,8,122,30,BookHaven North,BookHaven
+10050,Standing Desk,Furniture,10,0,5,SportsWorld Plaza,SportsWorld
+10051,Coffee Maker,Home Goods,14,7,15,MegaMart North,MegaMart
+10052,Running Shoes,Accessories,37,106,40,BookHaven East,BookHaven
+10053,Throw Pillow,Fitness,57,51,20,SportsWorld West,SportsWorld
+10054,Yoga Mat,Furniture,77,27,20,SportsWorld North,SportsWorld
+10055,Water Bottle,Fitness,5,10,50,BookHaven Uptown,BookHaven
+10056,Running Shoes,Furniture,57,168,40,SportsWorld East,SportsWorld
+10057,Action Figure Set,Fitness,38,27,15,TechStore Outlet,TechStore
+10058,Standing Desk,Books,13,4,5,MegaMart Mall,MegaMart
+10059,Action Figure Set,Furniture,68,10,15,SportsWorld North,SportsWorld
+10060,Resistance Bands,Furniture,228,9,40,MegaMart Mall,MegaMart
+10061,Yoga Mat,Electronics,59,92,20,TechStore Central,TechStore
+10062,Standing Desk,Accessories,12,8,5,SportsWorld West,SportsWorld
+10063,Fitness Tracker,Accessories,8,97,30,SportsWorld Central,SportsWorld
+10064,Mechanical Keyboard,Apparel,52,45,40,TechStore Mall,TechStore
+10065,Desk Lamp,Home Goods,34,9,20,BookHaven Plaza,BookHaven
+10066,Wireless Headphones,Fitness,139,123,30,SportsWorld South,SportsWorld
+10067,Throw Pillow,Apparel,94,3,20,MegaMart Uptown,MegaMart
+10068,Standing Desk,Electronics,9,8,5,SportsWorld Downtown,SportsWorld
+10069,Gaming Mouse,Home Goods,66,11,40,MegaMart Uptown,MegaMart
+10070,Water Bottle,Apparel,68,184,50,TechStore West,TechStore
+10071,Desk Lamp,Accessories,38,12,20,TechStore Uptown,TechStore
+10072,Standing Desk,Books,1,8,5,SportsWorld East,SportsWorld
+10073,Gaming Mouse,Books,160,149,40,SportsWorld North,SportsWorld
+10074,Mechanical Keyboard,Apparel,21,120,40,SportsWorld South,SportsWorld
+10075,Yoga Mat,Apparel,24,2,20,BookHaven Outlet,BookHaven
+10076,Desk Lamp,Furniture,18,78,20,SportsWorld Uptown,SportsWorld
+10077,Sci-Fi Novel,Furniture,5,41,20,FurniCo Plaza,FurniCo
+10078,Fitness Tracker,Apparel,44,13,30,SportsWorld Downtown,SportsWorld
+10079,Sci-Fi Novel,Furniture,56,69,20,SportsWorld Central,SportsWorld
+10080,Gaming Mouse,Home Goods,142,15,40,BookHaven East,BookHaven
+10081,Water Bottle,Toys,207,138,50,SportsWorld Mall,SportsWorld
+10082,Yoga Mat,Books,87,16,20,TechStore North,TechStore
+10083,Mechanical Keyboard,Toys,86,125,40,FurniCo Central,FurniCo
+10084,Yoga Mat,Apparel,14,107,20,MegaMart Plaza,MegaMart
+10085,Laptop Stand,Home Goods,82,6,30,SportsWorld South,SportsWorld
+10086,Laptop Stand,Electronics,54,117,30,BookHaven Plaza,BookHaven
+10087,Action Figure Set,Books,61,8,15,FurniCo East,FurniCo
+10088,Wireless Headphones,Apparel,38,31,30,TechStore Plaza,TechStore
+10089,Denim Jeans,Apparel,41,182,30,FurniCo North,FurniCo
+10090,Action Figure Set,Apparel,67,4,15,FurniCo Downtown,FurniCo
+10091,Laptop Stand,Apparel,48,153,30,FurniCo Central,FurniCo
+10092,Action Figure Set,Home Goods,47,28,15,TechStore North,TechStore
+10093,Coffee Maker,Electronics,3,43,15,BookHaven East,BookHaven
+10094,Desk Lamp,Accessories,21,60,20,MegaMart West,MegaMart
+10095,Cotton T-Shirt,Fitness,91,18,50,SportsWorld Downtown,SportsWorld
+10096,Coffee Maker,Apparel,11,10,15,SportsWorld West,SportsWorld
+10097,Laptop Stand,Books,34,36,30,MegaMart Mall,MegaMart
+10098,Standing Desk,Toys,18,19,5,TechStore North,TechStore
+10099,Ergonomic Chair,Electronics,10,43,10,MegaMart Outlet,MegaMart
+10100,Fitness Tracker,Toys,139,8,30,BookHaven Central,BookHaven
+10101,Coffee Maker,Electronics,38,8,15,FurniCo Outlet,FurniCo
+10102,Gaming Mouse,Apparel,162,8,40,TechStore Outlet,TechStore
+10103,Standing Desk,Furniture,0,12,5,FurniCo West,FurniCo
+10104,Sci-Fi Novel,Books,60,62,20,BookHaven East,BookHaven
+10105,Denim Jeans,Accessories,17,223,30,BookHaven Outlet,BookHaven
+10106,Desk Lamp,Electronics,60,62,20,BookHaven Uptown,BookHaven
+10107,Fitness Tracker,Apparel,1,111,30,BookHaven South,BookHaven
+10108,Sci-Fi Novel,Accessories,96,92,20,FurniCo South,FurniCo
+10109,Smart Watch,Accessories,33,6,20,MegaMart Plaza,MegaMart
+10110,Water Bottle,Furniture,32,9,50,MegaMart Downtown,MegaMart
+10111,Desk Lamp,Electronics,12,13,20,TechStore East,TechStore
+10112,Coffee Maker,Books,13,88,15,MegaMart East,MegaMart
+10113,Mechanical Keyboard,Books,63,147,40,BookHaven Downtown,BookHaven
+10114,Sci-Fi Novel,Books,40,7,20,FurniCo West,FurniCo
+10115,Sci-Fi Novel,Apparel,39,7,20,BookHaven Mall,BookHaven
+10116,Laptop Stand,Fitness,30,28,30,TechStore Outlet,TechStore
+10117,Wireless Headphones,Electronics,118,139,30,MegaMart South,MegaMart
+10118,Denim Jeans,Furniture,58,176,30,MegaMart East,MegaMart
+10119,Resistance Bands,Toys,238,191,40,MegaMart Outlet,MegaMart
+10120,Gaming Mouse,Books,85,13,40,BookHaven West,BookHaven
+10121,Gaming Mouse,Accessories,160,79,40,SportsWorld Plaza,SportsWorld
+10122,Sci-Fi Novel,Fitness,96,80,20,BookHaven East,BookHaven
+10123,Laptop Stand,Apparel,94,107,30,TechStore Central,TechStore
+10124,Standing Desk,Fitness,17,15,5,TechStore East,TechStore
+10125,Throw Pillow,Home Goods,78,3,20,BookHaven West,BookHaven
+10126,Resistance Bands,Home Goods,13,84,40,SportsWorld Central,SportsWorld
+10127,Running Shoes,Accessories,8,147,40,FurniCo Mall,FurniCo
+10128,Standing Desk,Toys,4,7,5,BookHaven North,BookHaven
+10129,Water Bottle,Furniture,97,190,50,MegaMart Outlet,MegaMart
+10130,Wireless Headphones,Books,20,11,30,TechStore East,TechStore
+10131,Ergonomic Chair,Electronics,59,31,10,BookHaven Mall,BookHaven
+10132,Mechanical Keyboard,Home Goods,52,126,40,FurniCo West,FurniCo
+10133,Denim Jeans,Fitness,72,109,30,MegaMart Uptown,MegaMart
+10134,Water Bottle,Books,53,205,50,BookHaven Plaza,BookHaven
+10135,Coffee Maker,Accessories,41,3,15,TechStore West,TechStore
+10136,Water Bottle,Accessories,5,95,50,SportsWorld Outlet,SportsWorld
+10137,Sci-Fi Novel,Toys,60,37,20,SportsWorld South,SportsWorld
+10138,Throw Pillow,Toys,38,87,20,TechStore Mall,TechStore
+10139,Resistance Bands,Home Goods,121,174,40,SportsWorld Uptown,SportsWorld
+10140,Running Shoes,Apparel,16,175,40,SportsWorld West,SportsWorld
+10141,Gaming Mouse,Furniture,14,64,40,BookHaven Central,BookHaven
+10142,Resistance Bands,Apparel,165,84,40,BookHaven East,BookHaven
+10143,Running Shoes,Toys,119,139,40,BookHaven Central,BookHaven
+10144,Cotton T-Shirt,Furniture,15,18,50,MegaMart Outlet,MegaMart
+10145,Mechanical Keyboard,Electronics,11,7,40,MegaMart Downtown,MegaMart
+10146,Coffee Maker,Accessories,25,50,15,TechStore Uptown,TechStore
+10147,Smart Watch,Home Goods,14,59,20,BookHaven Central,BookHaven
+10148,Denim Jeans,Toys,27,99,30,MegaMart Plaza,MegaMart
+10149,Mechanical Keyboard,Accessories,56,121,40,SportsWorld Uptown,SportsWorld
+10150,Laptop Stand,Electronics,62,11,30,FurniCo Downtown,FurniCo

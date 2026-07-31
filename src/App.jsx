@@ -16,9 +16,18 @@ function App() {
     return localStorage.getItem('smart_auth') || 'login'; // 'login', 'welcome', 'authenticated'
   });
 
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('smart_theme') || 'dark';
+  });
+
   useEffect(() => {
     localStorage.setItem('smart_auth', authState);
   }, [authState]);
+
+  useEffect(() => {
+    localStorage.setItem('smart_theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const handleLogin = () => {
     setAuthState('welcome');
@@ -47,7 +56,7 @@ function App() {
       case 'assistant':
         return <Assistant />;
       case 'settings':
-        return <Settings />;
+        return <Settings theme={theme} setTheme={setTheme} />;
       default:
         return <Dashboard setActiveTab={setActiveTab} />;
     }
@@ -55,7 +64,7 @@ function App() {
 
   return (
     <DataProvider>
-      <div className="app-container animate-fade-in">
+      <div className="app-container animate-fade-in" data-theme={theme}>
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={() => setAuthState('login')} />
         <main className="main-content">
           {renderContent()}

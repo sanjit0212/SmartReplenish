@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Card from '../components/Card';
 import { Save, Bell, Shield, Database, Moon } from 'lucide-react';
 
-const Settings = () => {
+const Settings = ({ theme, setTheme }) => {
   const [settings, setSettings] = useState({
-    theme: 'dark',
     notifications: true,
     autoReplenish: false,
     alertThreshold: 20
@@ -74,8 +73,8 @@ const Settings = () => {
               </div>
               <input 
                 type="checkbox" 
-                checked={settings.theme === 'dark'}
-                onChange={(e) => setSettings({...settings, theme: e.target.checked ? 'dark' : 'light'})}
+                checked={theme === 'dark'}
+                onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
                 style={{ width: '1.25rem', height: '1.25rem', accentColor: 'var(--accent-primary)' }}
               />
             </div>

@@ -6,22 +6,18 @@ import { useData } from '../contexts/DataContext';
 import './Assistant.css';
 
 const Assistant = () => {
-  const { kpis, replenishments } = useData();
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: 'bot',
-      text: "Hello! I'm your SmartReplenish AI Assistant. I have analyzed your dataset. How can I help you?",
-    }
-  ]);
+  const { 
+    kpis, 
+    replenishments,
+    chatHistory, 
+    setChatHistory,
+    chatMessages: messages,
+    setChatMessages: setMessages
+  } = useData();
+  
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
-  
-  const [chatHistory, setChatHistory] = useState([
-    { role: "user", parts: [{ text: "Hello" }] },
-    { role: "model", parts: [{ text: "Hello! I'm your SmartReplenish AI Assistant. I have analyzed your dataset. How can I help you?" }] }
-  ]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

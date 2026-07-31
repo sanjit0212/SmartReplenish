@@ -8,6 +8,7 @@ import './Replenishment.css';
 const Replenishment = () => {
   const { replenishments } = useData();
   const [filter, setFilter] = useState('All');
+  const [reviewedRows, setReviewedRows] = useState(new Set());
 
   const filteredData = useMemo(() => {
     if (!replenishments) return [];
@@ -25,6 +26,47 @@ const Replenishment = () => {
     return { total, actionNeeded, hotItems };
   }, [replenishments]);
 
+  const handleExportCSV = () => {
+    if (!filteredData || filteredData.length === 0) return;
+    
+    // Define headers
+    const headers = ['Product ID', 'Name', 'Store', 'Stock', 'Velocity', 'Action', 'Suggested Qty', 'Cluster Change'];
+    
+    // Map rows to CSV format
+    const csvRows = filteredData.map(row => {
+      return [
+        `"${row.id}"`,
+        `"${row.name}"`,
+        `"${row.store}"`,
+        row.stock,
+        row.velocity,
+        row.action,
+        row.suggested || 0,
+        row.clusterChange
+      ].join(',');
+    });
+    
+    const csvString = [headers.join(','), ...csvRows].join('\n');
+    
+    // Trigger download
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'smart_replenishment_export.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleReview = (uniqueId) => {
+    setReviewedRows(prev => {
+      const next = new Set(prev);
+      next.add(uniqueId);
+      return next;
+    });
+  };
+
   return (
     <div className="replenishment-view animate-fade-in">
       <div className="view-header mb-2">
@@ -33,7 +75,7 @@ const Replenishment = () => {
           <p className="text-muted">Smart algorithms driving inventory distribution.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">Export CSV</Button>
+          <Button variant="outline" onClick={handleExportCSV}>Export CSV</Button>
           <Button variant="primary" icon={Check}>Execute All Actions</Button>
         </div>
       </div>
@@ -88,53 +130,66 @@ const Replenishment = () => {
                   <td colSpan="8" className="text-center py-4 text-muted">No data available.</td>
                 </tr>
               ) : (
-                filteredData.map((row) => (
-                  <tr key={`${row.id}-${row.store}`}>
-                    <td className="text-muted font-mono">{row.id}</td>
-                    <td className="font-medium">{row.name}</td>
-                    <td><span className="badge badge-neutral">{row.store}</span></td>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <Package size={14} className="text-muted" />
-                        <span className={row.stock <= row.minOrder ? 'text-rose font-bold' : ''}>
-                          {row.stock}
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      {row.velocity === 'High' ? (
-                        <span className="flex items-center gap-1 text-emerald"><TrendingUp size={14}/> High</span>
-                      ) : row.velocity === 'Low' ? (
-                        <span className="flex items-center gap-1 text-rose"><TrendingDown size={14}/> Low</span>
-                      ) : (
-                        <span className="text-muted">Medium</span>
-                      )}
-                    </td>
-                    <td>
-                      {row.action === 'Reorder' ? (
-                        <span className="action-pill reorder"><AlertCircle size={14} /> Reorder {row.suggested}</span>
-                      ) : row.action === 'Transfer' ? (
-                        <span className="action-pill transfer"><ArrowRight size={14} /> Transfer Overstock</span>
-                      ) : row.action === 'Flag' ? (
-                        <span className="text-rose font-medium text-sm">Flagged</span>
-                      ) : (
-                        <span className="text-muted text-sm">-</span>
-                      )}
-                    </td>
-                    <td>
-                      {row.clusterChange === 'Increase' ? (
-                        <span className="text-emerald font-medium text-sm">↑ Upgrade Tier</span>
-                      ) : row.clusterChange === 'Decrease' ? (
-                        <span className="text-rose font-medium text-sm">↓ Downgrade Tier</span>
-                      ) : (
-                        <span className="text-muted text-sm">-</span>
-                      )}
-                    </td>
-                    <td className="text-right">
-                      {row.action !== 'None' && <Button variant="outline">Review</Button>}
-                    </td>
-                  </tr>
-                ))
+                filteredData.map((row) => {
+                  const uniqueId = `${row.id}-${row.store}`;
+                  const isReviewed = reviewedRows.has(uniqueId);
+                  
+                  return (
+                    <tr key={uniqueId}>
+                      <td className="text-muted font-mono">{row.id}</td>
+                      <td className="font-medium">{row.name}</td>
+                      <td><span className="badge badge-neutral">{row.store}</span></td>
+                      <td>
+                        <div className="flex items-center gap-2">
+                          <Package size={14} className="text-muted" />
+                          <span className={row.stock <= row.minOrder ? 'text-rose font-bold' : ''}>
+                            {row.stock}
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        {row.velocity === 'High' ? (
+                          <span className="flex items-center gap-1 text-emerald"><TrendingUp size={14}/> High</span>
+                        ) : row.velocity === 'Low' ? (
+                          <span className="flex items-center gap-1 text-rose"><TrendingDown size={14}/> Low</span>
+                        ) : (
+                          <span className="text-muted">Medium</span>
+                        )}
+                      </td>
+                      <td>
+                        {row.action === 'Reorder' ? (
+                          <span className="action-pill reorder"><AlertCircle size={14} /> Reorder {row.suggested}</span>
+                        ) : row.action === 'Transfer' ? (
+                          <span className="action-pill transfer"><ArrowRight size={14} /> Transfer Overstock</span>
+                        ) : row.action === 'Flag' ? (
+                          <span className="text-rose font-medium text-sm">Flagged</span>
+                        ) : (
+                          <span className="text-muted text-sm">-</span>
+                        )}
+                      </td>
+                      <td>
+                        {row.clusterChange === 'Increase' ? (
+                          <span className="text-emerald font-medium text-sm">↑ Upgrade Tier</span>
+                        ) : row.clusterChange === 'Decrease' ? (
+                          <span className="text-rose font-medium text-sm">↓ Downgrade Tier</span>
+                        ) : (
+                          <span className="text-muted text-sm">-</span>
+                        )}
+                      </td>
+                      <td className="text-right">
+                        {row.action !== 'None' && (
+                          <Button 
+                            variant={isReviewed ? "primary" : "outline"}
+                            onClick={() => handleReview(uniqueId)}
+                            style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem' }}
+                          >
+                            {isReviewed ? 'Approved' : 'Review'}
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
