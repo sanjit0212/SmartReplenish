@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
     try {
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-flash-latest",
+        model: "gemini-1.5-flash",
         systemInstruction: systemInstruction || "You are an AI assistant."
       });
       const chat = model.startChat({ history: history || [] });

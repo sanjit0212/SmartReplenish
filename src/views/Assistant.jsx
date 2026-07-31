@@ -74,12 +74,12 @@ const Assistant = () => {
           systemInstruction: dynamicPrompt
         })
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to communicate with AI');
-      }
       
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || data.details || 'Failed to communicate with AI');
+      }
       
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
@@ -92,7 +92,7 @@ const Assistant = () => {
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         sender: 'bot',
-        text: "Sorry, I encountered an error communicating with the API. Please ensure the GEMINI_API_KEY environment variable is configured in Vercel."
+        text: `Error: ${error.message}. If you haven't already, please ensure the GEMINI_API_KEY environment variable is configured in your hosting platform (Vercel).`
       }]);
     } finally {
       setIsTyping(false);
