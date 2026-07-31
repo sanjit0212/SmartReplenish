@@ -1,13 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { UploadCloud, FileSpreadsheet, CheckCircle, AlertCircle, Loader } from 'lucide-react';
-import Papa from 'papaparse';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import { useData } from '../contexts/DataContext';
 import './DataImport.css';
 
 const DataImport = () => {
-  const { setGridData, setSalesData } = useData();
+  const { setGridData, setSalesData, setReplenishments, setKpis } = useData();
   const [uploadStatus, setUploadStatus] = useState('idle'); // idle, uploading, processing, complete
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -19,51 +18,64 @@ const DataImport = () => {
     setErrorMsg(null);
 
     // Simulate network delay for UX
-    setTimeout(() => {
+    setTimeout(async () => {
       setUploadStatus('processing');
       
-      let grid = null;
-      let sales = null;
+      let gridCsv = null;
+      let selloutCsv = null;
 
-      const parsePromises = files.map(file => {
+      const readPromises = files.map(file => {
         return new Promise((resolve, reject) => {
-          Papa.parse(file, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (results) => {
-              if (file.name.toLowerCase().includes('grid')) {
-                grid = results.data;
-              } else if (file.name.toLowerCase().includes('sellout') || file.name.toLowerCase().includes('sale')) {
-                sales = results.data;
-              }
-              resolve();
-            },
-            error: (error) => {
-              reject(error);
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const text = e.target.result;
+            if (file.name.toLowerCase().includes('grid')) {
+              gridCsv = text;
+            } else if (file.name.toLowerCase().includes('sellout') || file.name.toLowerCase().includes('sale')) {
+              selloutCsv = text;
             }
-          });
+            resolve();
+          };
+          reader.onerror = () => reject(new Error('File read failed'));
+          reader.readAsText(file);
         });
       });
 
-      Promise.all(parsePromises).then(() => {
-        if (grid) setGridData(grid);
-        if (sales) setSalesData(sales);
+      try {
+        await Promise.all(readPromises);
         
-        if (!grid && !sales) {
+        if (!gridCsv && !selloutCsv) {
           setErrorMsg('Could not recognize file types. Please name files with "grid" or "sellout".');
           setUploadStatus('idle');
           return;
         }
 
+        const res = await fetch('/api/process', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gridCsv, selloutCsv })
+        });
+
+        if (!res.ok) {
+          throw new Error(`API error: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        
+        // set all context data directly from the backend
+        setGridData(data.gridData || []);
+        setSalesData(data.salesData || []);
+        setReplenishments(data.replenishments || []);
+        setKpis(data.kpis || null);
+        
         setTimeout(() => {
           setUploadStatus('complete');
         }, 1000);
-      }).catch(err => {
+      } catch (err) {
         console.error(err);
         setErrorMsg('Error parsing files.');
         setUploadStatus('idle');
-      });
-
+      }
     }, 800);
   };
 
