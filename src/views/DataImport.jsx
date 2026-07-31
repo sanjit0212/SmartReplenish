@@ -37,12 +37,13 @@ const DataImport = () => {
                 const jsonData = XLSX.utils.sheet_to_json(firstSheet);
                 
                 const name = file.name.toLowerCase();
-                if (name.includes('grid')) {
+                if (files.length === 1) {
+                  genericJson = jsonData;
+                } else if (name.includes('grid')) {
                   gridJson = jsonData;
                 } else if (name.includes('sellout') || name.includes('sale')) {
                   selloutJson = jsonData;
                 } else {
-                  // Fallback for single generic dataset
                   genericJson = jsonData;
                 }
                 resolve();

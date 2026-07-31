@@ -105,9 +105,13 @@ export default async function handler(req, res) {
     }
 
     // Generic Flow (Universal Company Data)
-    if (genericJson && genericJson.length > 0) {
+    const activeGenericJson = genericJson && genericJson.length > 0 
+      ? genericJson 
+      : (!gridJson && selloutJson && selloutJson.length > 0 ? selloutJson : null);
+
+    if (activeGenericJson) {
       // Intelligently map columns
-      const sampleRow = genericJson[0];
+      const sampleRow = activeGenericJson[0];
       const keys = Object.keys(sampleRow);
       
       const findKey = (keywords) => keys.find(k => keywords.some(kw => k.toLowerCase().includes(kw)));
@@ -122,7 +126,7 @@ export default async function handler(req, res) {
       const results = [];
       const categories = {};
       
-      genericJson.forEach((row, idx) => {
+      activeGenericJson.forEach((row, idx) => {
         const prodName = row[prodKey];
         const sales = parseFloat(row[salesKey]) || 0;
         const stock = stockKey ? (parseFloat(row[stockKey]) || 0) : 0;
@@ -153,7 +157,7 @@ export default async function handler(req, res) {
         }
       });
 
-      const sorted = [...genericJson].sort((a, b) => (parseFloat(b[salesKey]) || 0) - (parseFloat(a[salesKey]) || 0));
+      const sorted = [...activeGenericJson].sort((a, b) => (parseFloat(b[salesKey]) || 0) - (parseFloat(a[salesKey]) || 0));
       const topProducts = sorted.slice(0, 4).map((p, i) => ({
         id: `TOP-${i}`,
         name: String(p[prodKey]).substring(0, 20),
@@ -170,7 +174,7 @@ export default async function handler(req, res) {
 
       return res.status(200).json({
         gridData: [],
-        salesData: genericJson,
+        salesData: activeGenericJson,
         replenishments: results,
         kpis: {
           totalSales: Math.round(totalSales),
