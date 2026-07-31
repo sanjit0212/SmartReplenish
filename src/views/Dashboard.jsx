@@ -24,8 +24,9 @@ const Dashboard = ({ setActiveTab }) => {
   if (!kpis) return <div className="p-8">Loading dashboard metrics...</div>;
 
   // Insert the real sales total into our trend chart for this week
-  const trendData = [...salesData];
-  trendData[6].sales = kpis.totalSales;
+  const trendData = salesData.map((d, i) => 
+    i === 6 ? { ...d, sales: kpis?.totalSales || 0 } : d
+  );
 
   return (
     <div className="dashboard-view animate-fade-in">
@@ -41,7 +42,7 @@ const Dashboard = ({ setActiveTab }) => {
           <div className="kpi-icon bg-indigo"><DollarSign size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Total Sales (Weekly)</span>
-            <span className="kpi-value">€{kpis.totalSales.toLocaleString()}</span>
+            <span className="kpi-value">€{(kpis?.totalSales || 0).toLocaleString()}</span>
             <span className="kpi-trend positive"><ArrowUpRight size={16} /> Up this week</span>
           </div>
         </Card>
@@ -49,7 +50,7 @@ const Dashboard = ({ setActiveTab }) => {
           <div className="kpi-icon bg-emerald"><Store size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Active Stores</span>
-            <span className="kpi-value">{kpis.activeStores}</span>
+            <span className="kpi-value">{kpis?.activeStores || 0}</span>
             <span className="kpi-trend neutral">All networks connected</span>
           </div>
         </Card>
@@ -60,7 +61,7 @@ const Dashboard = ({ setActiveTab }) => {
           <div className="kpi-icon bg-rose"><AlertTriangle size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Replenishment Alerts</span>
-            <span className="kpi-value">{kpis.alertsCount}</span>
+            <span className="kpi-value">{kpis?.alertsCount || 0}</span>
             <span className="kpi-trend negative">Requires attention</span>
           </div>
         </Card>
@@ -68,7 +69,7 @@ const Dashboard = ({ setActiveTab }) => {
           <div className="kpi-icon bg-violet"><TrendingUp size={24} /></div>
           <div className="kpi-content">
             <span className="kpi-label">Avg. Sell-Through</span>
-            <span className="kpi-value">{kpis.avgSellThrough}%</span>
+            <span className="kpi-value">{kpis?.avgSellThrough || 0}%</span>
             <span className="kpi-trend positive"><ArrowUpRight size={16} /> Good clearance</span>
           </div>
         </Card>
@@ -101,7 +102,7 @@ const Dashboard = ({ setActiveTab }) => {
         <Card title="Category Sell-Through vs Stock" className="chart-card">
           <div className="chart-container">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={kpis.categoryData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <BarChart data={kpis?.categoryData || []} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
                 <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
@@ -130,7 +131,7 @@ const Dashboard = ({ setActiveTab }) => {
                 </tr>
               </thead>
               <tbody>
-                {kpis.topProducts.map((product) => (
+                {kpis.topProducts?.map((product) => (
                   <tr key={product.id}>
                     <td className="font-medium">{product.name}</td>
                     <td className={product.trend === 'up' ? 'text-emerald' : 'text-rose'}>

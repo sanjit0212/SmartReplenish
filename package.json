@@ -14,6 +14,7 @@
     "csv-parse": "^7.0.1",
     "lucide-react": "^1.28.0",
     "papaparse": "^5.5.4",
+    "playwright": "^1.62.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "recharts": "^3.10.1"
