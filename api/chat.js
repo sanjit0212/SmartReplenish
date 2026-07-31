@@ -19,27 +19,15 @@ export default async function handler(req, res) {
 
     try {
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash",
+        model: "gemini-flash-latest",
         systemInstruction: systemInstruction || "You are an AI assistant."
       });
       const chat = model.startChat({ history: history || [] });
       const result = await chat.sendMessage(message);
       responseText = result.response.text();
     } catch (e) {
-      console.log('gemini-1.5-flash failed, fetching available models:', e.message);
-      
-      try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-        const data = await response.json();
-        const modelNames = data.models ? data.models.map(m => m.name) : 'No models returned';
-        
-        return res.status(500).json({ 
-          error: 'Failed to communicate with AI', 
-          details: `Model 404. Available models for your key: ${JSON.stringify(modelNames)}`
-        });
-      } catch (err) {
-        return res.status(500).json({ error: 'Failed to communicate with AI', details: 'Failed to fetch model list' });
-      }
+      console.log('API Error:', e.message);
+      return res.status(500).json({ error: 'Failed to communicate with AI', details: e.message });
     }
 
     res.status(200).json({ text: responseText });
