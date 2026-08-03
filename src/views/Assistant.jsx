@@ -78,7 +78,9 @@ const Assistant = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || data.details || 'Failed to communicate with AI');
+        // Prioritize data.details to get the actual error message from the Gemini API
+        const errorMessage = data.details || data.error || 'Unknown error occurred';
+        throw new Error(errorMessage);
       }
       
       setMessages(prev => [...prev, {
@@ -92,7 +94,7 @@ const Assistant = () => {
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         sender: 'bot',
-        text: `Error: ${error.message}. If you haven't already, please ensure the GEMINI_API_KEY environment variable is configured in your hosting platform (Vercel).`
+        text: `Error: ${error.message}\n\n*If this says "API Key not valid", please double-check your GEMINI_API_KEY environment variable in Vercel.*`
       }]);
     } finally {
       setIsTyping(false);
